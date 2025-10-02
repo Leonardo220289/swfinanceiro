@@ -29,6 +29,51 @@ const Index = () => {
   );
 
   const filteredData = financialData.filter(d => selectedMonths.includes(d.month));
+  
+  // Agregar dados dos meses selecionados
+  const aggregatedData = filteredData.reduce(
+    (acc, data) => ({
+      faturamentoBruto: acc.faturamentoBruto + data.faturamentoBruto,
+      faturamentoLiquido: acc.faturamentoLiquido + data.faturamentoLiquido,
+      custos: acc.custos + data.custos,
+      lucroBruto: acc.lucroBruto + data.lucroBruto,
+      despesasVariaveis: acc.despesasVariaveis + data.despesasVariaveis,
+      despesasFixas: acc.despesasFixas + data.despesasFixas,
+      margemContribuicao: acc.margemContribuicao + data.margemContribuicao,
+      ebitda: acc.ebitda + data.ebitda,
+      lucroLiquido: acc.lucroLiquido + data.lucroLiquido,
+    }),
+    {
+      faturamentoBruto: 0,
+      faturamentoLiquido: 0,
+      custos: 0,
+      lucroBruto: 0,
+      despesasVariaveis: 0,
+      despesasFixas: 0,
+      margemContribuicao: 0,
+      ebitda: 0,
+      lucroLiquido: 0,
+    }
+  );
+
+  // Calcular margens baseadas nos valores agregados
+  const margemBruta = aggregatedData.faturamentoLiquido > 0 
+    ? (aggregatedData.lucroBruto / aggregatedData.faturamentoLiquido) * 100 
+    : 0;
+  
+  const margemContribuicaoPercent = aggregatedData.faturamentoLiquido > 0
+    ? (aggregatedData.margemContribuicao / aggregatedData.faturamentoLiquido) * 100
+    : 0;
+  
+  const margemEbitda = aggregatedData.faturamentoLiquido > 0
+    ? (aggregatedData.ebitda / aggregatedData.faturamentoLiquido) * 100
+    : 0;
+  
+  const margemLiquida = aggregatedData.faturamentoLiquido > 0
+    ? (aggregatedData.lucroLiquido / aggregatedData.faturamentoLiquido) * 100
+    : 0;
+
+  // Para cálculo de tendência, usar últimos dois meses do período filtrado
   const latest = filteredData[filteredData.length - 1] || getLatestMonth();
   const previous = filteredData[filteredData.length - 2] || getPreviousMonth();
 
@@ -89,7 +134,7 @@ const Index = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <KPICard
             title="Faturamento Bruto"
-            value={formatCurrency(latest.faturamentoBruto)}
+            value={formatCurrency(aggregatedData.faturamentoBruto)}
             trend={faturamentoBrutoTrend}
             trendLabel="vs mês anterior"
             icon={<DollarSign className="h-6 w-6" />}
@@ -97,25 +142,25 @@ const Index = () => {
           />
           <KPICard
             title="Faturamento Líquido"
-            value={formatCurrency(latest.faturamentoLiquido)}
+            value={formatCurrency(aggregatedData.faturamentoLiquido)}
             icon={<DollarSign className="h-6 w-6" />}
             variant="default"
           />
           <KPICard
             title="EBITDA"
-            value={formatCurrency(latest.ebitda)}
+            value={formatCurrency(aggregatedData.ebitda)}
             trend={ebitdaTrend}
             trendLabel="vs mês anterior"
             icon={<TrendingUp className="h-6 w-6" />}
-            variant={latest.ebitda >= 0 ? "success" : "danger"}
+            variant={aggregatedData.ebitda >= 0 ? "success" : "danger"}
           />
           <KPICard
             title="Lucro Líquido"
-            value={formatCurrency(latest.lucroLiquido)}
+            value={formatCurrency(aggregatedData.lucroLiquido)}
             trend={lucroLiquidoTrend}
             trendLabel="vs mês anterior"
             icon={<Target className="h-6 w-6" />}
-            variant={latest.lucroLiquido >= 0 ? "success" : "danger"}
+            variant={aggregatedData.lucroLiquido >= 0 ? "success" : "danger"}
           />
         </div>
 
@@ -123,27 +168,27 @@ const Index = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <KPICard
             title="Margem Bruta"
-            value={formatPercent(latest.margemBruta)}
+            value={formatPercent(margemBruta)}
             icon={<PieChart className="h-6 w-6" />}
             variant="default"
           />
           <KPICard
             title="Margem de Contribuição"
-            value={formatPercent(latest.margemContribuicaoPercent)}
+            value={formatPercent(margemContribuicaoPercent)}
             icon={<PieChart className="h-6 w-6" />}
             variant="default"
           />
           <KPICard
             title="Margem EBITDA"
-            value={formatPercent(latest.margemEbitda)}
+            value={formatPercent(margemEbitda)}
             icon={<PieChart className="h-6 w-6" />}
-            variant={latest.margemEbitda >= 0 ? "success" : "danger"}
+            variant={margemEbitda >= 0 ? "success" : "danger"}
           />
           <KPICard
             title="Margem Líquida"
-            value={formatPercent(latest.margemLiquida)}
+            value={formatPercent(margemLiquida)}
             icon={<PieChart className="h-6 w-6" />}
-            variant={latest.margemLiquida >= 0 ? "success" : "danger"}
+            variant={margemLiquida >= 0 ? "success" : "danger"}
           />
         </div>
 
