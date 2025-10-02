@@ -2,11 +2,14 @@ import { KPICard } from "@/components/KPICard";
 import { RevenueChart } from "@/components/RevenueChart";
 import { MarginChart } from "@/components/MarginChart";
 import { ExpensesChart } from "@/components/ExpensesChart";
+import { MonthFilter } from "@/components/MonthFilter";
 import {
   DollarSign,
   TrendingUp,
   PieChart,
   Target,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from "lucide-react";
 import {
   getLatestMonth,
@@ -14,11 +17,20 @@ import {
   calculateTrend,
   formatCurrency,
   formatPercent,
+  financialData,
+  getMonthData,
+  getPreviousMonthData,
 } from "@/data/financialData";
+import { useState } from "react";
 
 const Index = () => {
-  const latest = getLatestMonth();
-  const previous = getPreviousMonth();
+  const [selectedMonths, setSelectedMonths] = useState<string[]>(
+    financialData.map(d => d.month)
+  );
+
+  const filteredData = financialData.filter(d => selectedMonths.includes(d.month));
+  const latest = filteredData[filteredData.length - 1] || getLatestMonth();
+  const previous = filteredData[filteredData.length - 2] || getPreviousMonth();
 
   const faturamentoBrutoTrend = calculateTrend(
     latest.faturamentoBruto,
@@ -29,6 +41,25 @@ const Index = () => {
     previous.lucroLiquido
   );
   const ebitdaTrend = calculateTrend(latest.ebitda, previous.ebitda);
+
+  const renderTrendCell = (current: number, previous: number | null) => {
+    if (!previous) return null;
+    const trend = calculateTrend(current, previous);
+    const isPositive = trend >= 0;
+    
+    return (
+      <div className="flex items-center justify-end gap-2">
+        {isPositive ? (
+          <ArrowUpIcon className="h-4 w-4 text-accent" />
+        ) : (
+          <ArrowDownIcon className="h-4 w-4 text-destructive" />
+        )}
+        <span className={`text-sm font-medium ${isPositive ? "text-accent" : "text-destructive"}`}>
+          {Math.abs(trend).toFixed(1)}%
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,6 +79,12 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
+        {/* Month Filter */}
+        <MonthFilter 
+          selectedMonths={selectedMonths}
+          onMonthsChange={setSelectedMonths}
+        />
+
         {/* KPI Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <KPICard
@@ -122,7 +159,7 @@ const Index = () => {
 
         {/* Summary Table */}
         <div className="bg-card rounded-xl border p-6">
-          <h3 className="text-lg font-semibold mb-4">Resumo Mensal</h3>
+          <h3 className="text-lg font-semibold mb-4">Resumo Mensal com Comparativos</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -130,77 +167,76 @@ const Index = () => {
                   <th className="text-left py-3 px-4 font-medium text-muted-foreground">
                     Indicador
                   </th>
-                  <th className="text-right py-3 px-4 font-medium text-muted-foreground">
-                    Jun/25
-                  </th>
-                  <th className="text-right py-3 px-4 font-medium text-muted-foreground">
-                    Jul/25
-                  </th>
-                  <th className="text-right py-3 px-4 font-medium text-muted-foreground">
-                    Ago/25
-                  </th>
+                  {filteredData.map((data) => (
+                    <th key={data.month} className="text-right py-3 px-4 font-medium text-muted-foreground">
+                      <div>{data.month}</div>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Faturamento Bruto</td>
-                  <td className="py-3 px-4 text-right">
-                    {formatCurrency(109664.03)}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    {formatCurrency(162370.81)}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    {formatCurrency(112951.04)}
-                  </td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className="text-right">{formatCurrency(data.faturamentoBruto)}</div>
+                        {prev && renderTrendCell(data.faturamentoBruto, prev.faturamentoBruto)}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Custos</td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(48489.97)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(57118.57)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(50405.32)}
-                  </td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className="text-right text-destructive">{formatCurrency(data.custos)}</div>
+                        {prev && renderTrendCell(data.custos, prev.custos)}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Despesas Variáveis</td>
-                  <td className="py-3 px-4 text-right text-warning">
-                    {formatCurrency(18531.05)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-warning">
-                    {formatCurrency(9710.28)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-warning">
-                    {formatCurrency(9721.50)}
-                  </td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className="text-right text-warning">{formatCurrency(data.despesasVariaveis)}</div>
+                        {prev && renderTrendCell(data.despesasVariaveis, prev.despesasVariaveis)}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Despesas Fixas</td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(11523.52)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(55842.69)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-destructive">
-                    {formatCurrency(55338.98)}
-                  </td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className="text-right text-destructive">{formatCurrency(data.despesasFixas)}</div>
+                        {prev && renderTrendCell(data.despesasFixas, prev.despesasFixas)}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-bold">Lucro Líquido</td>
-                  <td className="py-3 px-4 text-right font-bold text-accent">
-                    {formatCurrency(20110.20)}
-                  </td>
-                  <td className="py-3 px-4 text-right font-bold text-accent">
-                    {formatCurrency(17234.87)}
-                  </td>
-                  <td className="py-3 px-4 text-right font-bold text-destructive">
-                    {formatCurrency(-10059.71)}
-                  </td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    const isPositive = data.lucroLiquido >= 0;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className={`text-right font-bold ${isPositive ? "text-accent" : "text-destructive"}`}>
+                          {formatCurrency(data.lucroLiquido)}
+                        </div>
+                        {prev && renderTrendCell(data.lucroLiquido, prev.lucroLiquido)}
+                      </td>
+                    );
+                  })}
                 </tr>
               </tbody>
             </table>

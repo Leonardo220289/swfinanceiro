@@ -84,3 +84,13 @@ export const calculateTrend = (current: number, previous: number): number => {
   if (previous === 0) return 0;
   return ((current - previous) / Math.abs(previous)) * 100;
 };
+
+export const getMonthData = (month: string) => {
+  return financialData.find(d => d.month === month);
+};
+
+export const getPreviousMonthData = (month: string) => {
+  const currentIndex = financialData.findIndex(d => d.month === month);
+  if (currentIndex <= 0) return null;
+  return financialData[currentIndex - 1];
+};
