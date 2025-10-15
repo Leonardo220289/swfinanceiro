@@ -64,6 +64,22 @@ export const financialData: MonthlyData[] = [
     lucroLiquido: -10059.71,
     margemLiquida: -9.5,
   },
+  {
+    month: "Set/25",
+    faturamentoBruto: 204931.74,
+    faturamentoLiquido: 197779.81,
+    custos: 62015.47,
+    lucroBruto: 135764.34,
+    margemBruta: 68.6,
+    despesasVariaveis: 10307.04,
+    despesasFixas: 64587.27,
+    margemContribuicao: 125457.30,
+    margemContribuicaoPercent: 63.4,
+    ebitda: 60870.03,
+    margemEbitda: 30.8,
+    lucroLiquido: 60790.78,
+    margemLiquida: 30.7,
+  },
 ];
 
 export const formatCurrency = (value: number): string => {
