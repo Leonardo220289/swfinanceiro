@@ -1,6 +1,7 @@
 export interface MonthlyData {
   month: string;
   faturamentoBruto: number;
+  impostos: number;
   faturamentoLiquido: number;
   custos: number;
   lucroBruto: number;
@@ -19,6 +20,7 @@ export const financialData: MonthlyData[] = [
   {
     month: "Jun/25",
     faturamentoBruto: 109664.03,
+    impostos: 11009.29,
     faturamentoLiquido: 98654.74,
     custos: 48489.97,
     lucroBruto: 50164.77,
@@ -35,22 +37,24 @@ export const financialData: MonthlyData[] = [
   {
     month: "Jul/25",
     faturamentoBruto: 162370.81,
-    faturamentoLiquido: 139906.41,
+    impostos: 6464.40,
+    faturamentoLiquido: 155906.41,
     custos: 57118.57,
-    lucroBruto: 82787.84,
-    margemBruta: 59.2,
+    lucroBruto: 98787.84,
+    margemBruta: 63.4,
     despesasVariaveis: 9710.28,
     despesasFixas: 55842.69,
-    margemContribuicao: 73077.56,
-    margemContribuicaoPercent: 52.2,
-    ebitda: 17234.87,
-    margemEbitda: 12.3,
-    lucroLiquido: 17234.87,
-    margemLiquida: 12.3,
+    margemContribuicao: 89077.56,
+    margemContribuicaoPercent: 57.1,
+    ebitda: 33234.87,
+    margemEbitda: 21.3,
+    lucroLiquido: 33234.87,
+    margemLiquida: 21.3,
   },
   {
     month: "Ago/25",
     faturamentoBruto: 112951.04,
+    impostos: 6882.57,
     faturamentoLiquido: 106068.47,
     custos: 50405.32,
     lucroBruto: 55663.15,
@@ -67,18 +71,19 @@ export const financialData: MonthlyData[] = [
   {
     month: "Set/25",
     faturamentoBruto: 204931.74,
-    faturamentoLiquido: 197779.81,
-    custos: 62015.47,
-    lucroBruto: 135764.34,
-    margemBruta: 68.6,
+    impostos: 46006.52,
+    faturamentoLiquido: 158925.22,
+    custos: 65541.22,
+    lucroBruto: 93384.00,
+    margemBruta: 58.8,
     despesasVariaveis: 10307.04,
     despesasFixas: 64587.27,
-    margemContribuicao: 125457.30,
-    margemContribuicaoPercent: 63.4,
-    ebitda: 60870.03,
-    margemEbitda: 30.8,
-    lucroLiquido: 60790.78,
-    margemLiquida: 30.7,
+    margemContribuicao: 83076.96,
+    margemContribuicaoPercent: 52.3,
+    ebitda: 18489.69,
+    margemEbitda: 11.6,
+    lucroLiquido: 18410.44,
+    margemLiquida: 11.6,
   },
 ];
 

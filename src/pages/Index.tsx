@@ -34,6 +34,7 @@ const Index = () => {
   const aggregatedData = filteredData.reduce(
     (acc, data) => ({
       faturamentoBruto: acc.faturamentoBruto + data.faturamentoBruto,
+      impostos: acc.impostos + data.impostos,
       faturamentoLiquido: acc.faturamentoLiquido + data.faturamentoLiquido,
       custos: acc.custos + data.custos,
       lucroBruto: acc.lucroBruto + data.lucroBruto,
@@ -45,6 +46,7 @@ const Index = () => {
     }),
     {
       faturamentoBruto: 0,
+      impostos: 0,
       faturamentoLiquido: 0,
       custos: 0,
       lucroBruto: 0,
@@ -228,6 +230,18 @@ const Index = () => {
                       <td key={data.month} className="py-3 px-4">
                         <div className="text-right">{formatCurrency(data.faturamentoBruto)}</div>
                         {prev && renderTrendCell(data.faturamentoBruto, prev.faturamentoBruto)}
+                      </td>
+                    );
+                  })}
+                </tr>
+                <tr className="border-b hover:bg-muted/50 transition-colors">
+                  <td className="py-3 px-4 font-medium">Impostos</td>
+                  {filteredData.map((data, idx) => {
+                    const prev = idx > 0 ? filteredData[idx - 1] : null;
+                    return (
+                      <td key={data.month} className="py-3 px-4">
+                        <div className="text-right text-destructive">{formatCurrency(data.impostos)}</div>
+                        {prev && renderTrendCell(data.impostos, prev.impostos)}
                       </td>
                     );
                   })}
