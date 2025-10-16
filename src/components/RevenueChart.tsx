@@ -53,6 +53,14 @@ export const RevenueChart = () => {
             name="Faturamento Líquido"
             dot={{ fill: 'hsl(var(--chart-2))', r: 5 }}
           />
+          <Line
+            type="monotone"
+            dataKey="lucroLiquido"
+            stroke="hsl(var(--accent))"
+            strokeWidth={3}
+            name="Lucro Líquido"
+            dot={{ fill: 'hsl(var(--accent))', r: 5 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </Card>

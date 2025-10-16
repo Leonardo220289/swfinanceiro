@@ -39,7 +39,7 @@ export const ExpensesChart = () => {
           <Legend />
           <Bar 
             dataKey="custos" 
-            fill="hsl(var(--destructive))" 
+            fill="hsl(var(--chart-black))" 
             name="Custos"
             radius={[8, 8, 0, 0]}
           />
@@ -51,7 +51,7 @@ export const ExpensesChart = () => {
           />
           <Bar 
             dataKey="despesasFixas" 
-            fill="hsl(var(--chart-5))" 
+            fill="hsl(var(--destructive))" 
             name="Despesas Fixas"
             radius={[8, 8, 0, 0]}
           />

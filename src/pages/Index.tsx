@@ -75,19 +75,21 @@ const Index = () => {
     ? (aggregatedData.lucroLiquido / aggregatedData.faturamentoLiquido) * 100
     : 0;
 
-  // Para cálculo de tendência, usar últimos dois meses do período filtrado
+  // Para cálculo de tendência, usar último mês vs penúltimo mês do período filtrado
   const latest = filteredData[filteredData.length - 1] || getLatestMonth();
-  const previous = filteredData[filteredData.length - 2] || getPreviousMonth();
+  const previous = filteredData.length >= 2 
+    ? filteredData[filteredData.length - 2] 
+    : (selectedMonths.length === 1 ? getPreviousMonthData(latest.month) : null);
 
-  const faturamentoBrutoTrend = calculateTrend(
-    latest.faturamentoBruto,
-    previous.faturamentoBruto
-  );
-  const lucroLiquidoTrend = calculateTrend(
-    latest.lucroLiquido,
-    previous.lucroLiquido
-  );
-  const ebitdaTrend = calculateTrend(latest.ebitda, previous.ebitda);
+  const faturamentoBrutoTrend = previous 
+    ? calculateTrend(latest.faturamentoBruto, previous.faturamentoBruto)
+    : null;
+  const lucroLiquidoTrend = previous
+    ? calculateTrend(latest.lucroLiquido, previous.lucroLiquido)
+    : null;
+  const ebitdaTrend = previous 
+    ? calculateTrend(latest.ebitda, previous.ebitda)
+    : null;
 
   const renderTrendCell = (current: number, previous: number | null) => {
     if (!previous) return null;
@@ -137,7 +139,7 @@ const Index = () => {
           <KPICard
             title="Faturamento Bruto"
             value={formatCurrency(aggregatedData.faturamentoBruto)}
-            trend={faturamentoBrutoTrend}
+            trend={faturamentoBrutoTrend ?? undefined}
             trendLabel="vs mês anterior"
             icon={<DollarSign className="h-6 w-6" />}
             variant="primary"
@@ -151,7 +153,7 @@ const Index = () => {
           <KPICard
             title="EBITDA"
             value={formatCurrency(aggregatedData.ebitda)}
-            trend={ebitdaTrend}
+            trend={ebitdaTrend ?? undefined}
             trendLabel="vs mês anterior"
             icon={<TrendingUp className="h-6 w-6" />}
             variant={aggregatedData.ebitda >= 0 ? "success" : "danger"}
@@ -159,7 +161,7 @@ const Index = () => {
           <KPICard
             title="Lucro Líquido"
             value={formatCurrency(aggregatedData.lucroLiquido)}
-            trend={lucroLiquidoTrend}
+            trend={lucroLiquidoTrend ?? undefined}
             trendLabel="vs mês anterior"
             icon={<Target className="h-6 w-6" />}
             variant={aggregatedData.lucroLiquido >= 0 ? "success" : "danger"}
@@ -219,6 +221,9 @@ const Index = () => {
                       <div>{data.month}</div>
                     </th>
                   ))}
+                  <th className="text-right py-3 px-4 font-medium text-muted-foreground">
+                    <div>Total</div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -233,6 +238,9 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className="text-right font-semibold">{formatCurrency(aggregatedData.faturamentoBruto)}</div>
+                  </td>
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Impostos</td>
@@ -245,6 +253,9 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className="text-right font-semibold text-destructive">{formatCurrency(aggregatedData.impostos)}</div>
+                  </td>
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Custos</td>
@@ -257,6 +268,9 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className="text-right font-semibold text-destructive">{formatCurrency(aggregatedData.custos)}</div>
+                  </td>
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Despesas Variáveis</td>
@@ -269,6 +283,9 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className="text-right font-semibold text-warning">{formatCurrency(aggregatedData.despesasVariaveis)}</div>
+                  </td>
                 </tr>
                 <tr className="border-b hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-medium">Despesas Fixas</td>
@@ -281,6 +298,9 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className="text-right font-semibold text-destructive">{formatCurrency(aggregatedData.despesasFixas)}</div>
+                  </td>
                 </tr>
                 <tr className="hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 font-bold">Lucro Líquido</td>
@@ -296,6 +316,11 @@ const Index = () => {
                       </td>
                     );
                   })}
+                  <td className="py-3 px-4">
+                    <div className={`text-right font-bold ${aggregatedData.lucroLiquido >= 0 ? "text-accent" : "text-destructive"}`}>
+                      {formatCurrency(aggregatedData.lucroLiquido)}
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>

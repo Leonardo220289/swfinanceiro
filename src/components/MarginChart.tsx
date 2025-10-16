@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,7 +16,7 @@ export const MarginChart = () => {
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-6">Evolução das Margens</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={financialData}>
+        <LineChart data={financialData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis 
             dataKey="month" 
@@ -37,25 +37,31 @@ export const MarginChart = () => {
             }}
           />
           <Legend />
-          <Bar 
+          <Line 
+            type="monotone"
             dataKey="margemBruta" 
-            fill="hsl(var(--primary))" 
+            stroke="hsl(var(--primary))" 
+            strokeWidth={3}
             name="Margem Bruta"
-            radius={[8, 8, 0, 0]}
+            dot={{ fill: 'hsl(var(--primary))', r: 5 }}
           />
-          <Bar 
+          <Line 
+            type="monotone"
             dataKey="margemEbitda" 
-            fill="hsl(var(--accent))" 
+            stroke="hsl(var(--accent))" 
+            strokeWidth={3}
             name="Margem EBITDA"
-            radius={[8, 8, 0, 0]}
+            dot={{ fill: 'hsl(var(--accent))', r: 5 }}
           />
-          <Bar 
+          <Line 
+            type="monotone"
             dataKey="margemLiquida" 
-            fill="hsl(var(--chart-3))" 
+            stroke="hsl(var(--chart-3))" 
+            strokeWidth={3}
             name="Margem Líquida"
-            radius={[8, 8, 0, 0]}
+            dot={{ fill: 'hsl(var(--chart-3))', r: 5 }}
           />
-        </BarChart>
+        </LineChart>
       </ResponsiveContainer>
     </Card>
   );
