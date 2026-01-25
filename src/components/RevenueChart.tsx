@@ -8,10 +8,16 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import { financialData, formatCurrency } from "@/data/financialData";
 
 export const RevenueChart = () => {
+  // Calcular médias históricas
+  const avgFaturamentoBruto = financialData.reduce((acc, d) => acc + d.faturamentoBruto, 0) / financialData.length;
+  const avgFaturamentoLiquido = financialData.reduce((acc, d) => acc + d.faturamentoLiquido, 0) / financialData.length;
+  const avgLucroLiquido = financialData.reduce((acc, d) => acc + d.lucroLiquido, 0) / financialData.length;
+
   return (
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-6">Evolução de Receitas</h3>
@@ -37,6 +43,20 @@ export const RevenueChart = () => {
             }}
           />
           <Legend />
+          {/* Linhas de média histórica */}
+          <ReferenceLine 
+            y={avgFaturamentoBruto} 
+            stroke="hsl(var(--primary))" 
+            strokeDasharray="5 5" 
+            strokeOpacity={0.6}
+            label={{ value: `Média: ${formatCurrency(avgFaturamentoBruto)}`, position: 'insideTopRight', fontSize: 10, fill: 'hsl(var(--primary))' }}
+          />
+          <ReferenceLine 
+            y={avgLucroLiquido} 
+            stroke="hsl(var(--accent))" 
+            strokeDasharray="5 5" 
+            strokeOpacity={0.6}
+          />
           <Line
             type="monotone"
             dataKey="faturamentoBruto"
