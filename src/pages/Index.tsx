@@ -23,6 +23,7 @@ import {
   getPreviousMonthData,
 } from "@/data/financialData";
 import { useState } from "react";
+import saudeWorkLogo from "@/assets/saude-work-logo.png";
 
 const Index = () => {
   const [selectedMonths, setSelectedMonths] = useState<string[]>(
@@ -126,13 +127,20 @@ const Index = () => {
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-6 py-8">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight">
-              Dashboard Financeiro
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Saúde Work - Demonstrativo de Resultados
-            </p>
+          <div className="flex items-center gap-6">
+            <img 
+              src={saudeWorkLogo} 
+              alt="Saúde Work" 
+              className="h-16 w-auto"
+            />
+            <div className="space-y-1">
+              <h1 className="text-4xl font-bold tracking-tight">
+                Dashboard Financeiro
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                Demonstrativo de Resultados
+              </p>
+            </div>
           </div>
         </div>
       </header>
