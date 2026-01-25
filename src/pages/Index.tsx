@@ -4,6 +4,7 @@ import { MarginChart } from "@/components/MarginChart";
 import { ExpensesChart } from "@/components/ExpensesChart";
 import { RevenueCompositionChart } from "@/components/RevenueCompositionChart";
 import { MonthFilter } from "@/components/MonthFilter";
+import { GoalsPanel } from "@/components/GoalsPanel";
 import {
   DollarSign,
   TrendingUp,
@@ -152,6 +153,9 @@ const Index = () => {
           selectedMonths={selectedMonths}
           onMonthsChange={setSelectedMonths}
         />
+
+        {/* Goals Panel */}
+        <GoalsPanel selectedMonths={selectedMonths} />
 
         {/* KPI Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
