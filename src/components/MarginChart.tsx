@@ -8,10 +8,16 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import { financialData } from "@/data/financialData";
 
 export const MarginChart = () => {
+  // Calcular médias históricas das margens
+  const avgMargemBruta = financialData.reduce((acc, d) => acc + d.margemBruta, 0) / financialData.length;
+  const avgMargemEbitda = financialData.reduce((acc, d) => acc + d.margemEbitda, 0) / financialData.length;
+  const avgMargemLiquida = financialData.reduce((acc, d) => acc + d.margemLiquida, 0) / financialData.length;
+
   return (
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-6">Evolução das Margens</h3>
@@ -37,6 +43,26 @@ export const MarginChart = () => {
             }}
           />
           <Legend />
+          {/* Linhas de média histórica */}
+          <ReferenceLine 
+            y={avgMargemBruta} 
+            stroke="hsl(var(--primary))" 
+            strokeDasharray="5 5" 
+            strokeOpacity={0.6}
+            label={{ value: `Média: ${avgMargemBruta.toFixed(1)}%`, position: 'insideTopRight', fontSize: 10, fill: 'hsl(var(--primary))' }}
+          />
+          <ReferenceLine 
+            y={avgMargemEbitda} 
+            stroke="hsl(var(--accent))" 
+            strokeDasharray="5 5" 
+            strokeOpacity={0.6}
+          />
+          <ReferenceLine 
+            y={avgMargemLiquida} 
+            stroke="hsl(var(--chart-3))" 
+            strokeDasharray="5 5" 
+            strokeOpacity={0.6}
+          />
           <Line 
             type="monotone"
             dataKey="margemBruta" 

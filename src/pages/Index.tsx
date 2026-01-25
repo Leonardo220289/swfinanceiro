@@ -2,6 +2,7 @@ import { KPICard } from "@/components/KPICard";
 import { RevenueChart } from "@/components/RevenueChart";
 import { MarginChart } from "@/components/MarginChart";
 import { ExpensesChart } from "@/components/ExpensesChart";
+import { RevenueCompositionChart } from "@/components/RevenueCompositionChart";
 import { MonthFilter } from "@/components/MonthFilter";
 import {
   DollarSign,
@@ -212,7 +213,8 @@ const Index = () => {
           <MarginChart />
         </div>
 
-        <div className="grid gap-6 mb-8">
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+          <RevenueCompositionChart />
           <ExpensesChart />
         </div>
 
