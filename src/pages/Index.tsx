@@ -4,7 +4,7 @@ import { MarginChart } from "@/components/MarginChart";
 import { ExpensesChart } from "@/components/ExpensesChart";
 import { RevenueCompositionChart } from "@/components/RevenueCompositionChart";
 import { MonthFilter } from "@/components/MonthFilter";
-import { GoalsPanel } from "@/components/GoalsPanel";
+import { Button } from "@/components/ui/button";
 import {
   DollarSign,
   TrendingUp,
@@ -24,9 +24,11 @@ import {
   getPreviousMonthData,
 } from "@/data/financialData";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import saudeWorkLogo from "@/assets/saude-work-logo.png";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedMonths, setSelectedMonths] = useState<string[]>(
     financialData.map(d => d.month)
   );
@@ -128,20 +130,29 @@ const Index = () => {
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center gap-6">
-            <img 
-              src={saudeWorkLogo} 
-              alt="Saúde Work" 
-              className="h-16 w-auto"
-            />
-            <div className="space-y-1">
-              <h1 className="text-4xl font-bold tracking-tight">
-                Dashboard Financeiro
-              </h1>
-              <p className="text-muted-foreground text-lg">
-                Demonstrativo de Resultados
-              </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <img 
+                src={saudeWorkLogo} 
+                alt="Saúde Work" 
+                className="h-16 w-auto"
+              />
+              <div className="space-y-1">
+                <h1 className="text-4xl font-bold tracking-tight">
+                  Dashboard Financeiro
+                </h1>
+                <p className="text-muted-foreground text-lg">
+                  Demonstrativo de Resultados
+                </p>
+              </div>
             </div>
+            <Button 
+              onClick={() => navigate("/metas")}
+              className="gap-2"
+            >
+              <Target className="h-4 w-4" />
+              Metas 2026
+            </Button>
           </div>
         </div>
       </header>
@@ -153,9 +164,6 @@ const Index = () => {
           selectedMonths={selectedMonths}
           onMonthsChange={setSelectedMonths}
         />
-
-        {/* Goals Panel */}
-        <GoalsPanel selectedMonths={selectedMonths} />
 
         {/* KPI Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
