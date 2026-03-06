@@ -18,18 +18,26 @@ const GOALS = {
 const Metas = () => {
   const navigate = useNavigate();
 
-  // Calcular médias (evitar divisão por zero)
-  const mediaFaturamentoBruto = DADOS_2026.mesesContabilizados > 0 
-    ? DADOS_2026.faturamentoBrutoAcumulado / DADOS_2026.mesesContabilizados 
+  const dados2026 = getDataByYear("26");
+  const mesesContabilizados = dados2026.length;
+  
+  const faturamentoBrutoAcumulado = dados2026.reduce((acc, d) => acc + d.faturamentoBruto, 0);
+  const lucroLiquidoAcumulado = dados2026.reduce((acc, d) => acc + d.lucroLiquido, 0);
+  const lucroBrutoAcumulado = dados2026.reduce((acc, d) => acc + d.lucroBruto, 0);
+  const faturamentoLiquidoAcumulado = dados2026.reduce((acc, d) => acc + d.faturamentoLiquido, 0);
+
+  // Calcular médias
+  const mediaFaturamentoBruto = mesesContabilizados > 0 
+    ? faturamentoBrutoAcumulado / mesesContabilizados 
     : 0;
-  const margemBrutaMedia = DADOS_2026.faturamentoLiquidoAcumulado > 0 
-    ? (DADOS_2026.lucroBrutoAcumulado / DADOS_2026.faturamentoLiquidoAcumulado) * 100 
+  const margemBrutaMedia = faturamentoLiquidoAcumulado > 0 
+    ? (lucroBrutoAcumulado / faturamentoLiquidoAcumulado) * 100 
     : 0;
 
   // Calcular progressos
-  const progressFaturamentoAnual = Math.min((DADOS_2026.faturamentoBrutoAcumulado / GOALS.faturamentoBrutoAnual) * 100, 100);
+  const progressFaturamentoAnual = Math.min((faturamentoBrutoAcumulado / GOALS.faturamentoBrutoAnual) * 100, 100);
   const progressMediaMensal = Math.min((mediaFaturamentoBruto / GOALS.mediaFaturamentoMensal) * 100, 100);
-  const progressLucroLiquido = Math.min((DADOS_2026.lucroLiquidoAcumulado / GOALS.lucroLiquidoAnual) * 100, 100);
+  const progressLucroLiquido = Math.min((lucroLiquidoAcumulado / GOALS.lucroLiquidoAnual) * 100, 100);
   const progressMargemBruta = Math.min((margemBrutaMedia / GOALS.margemBrutaMinima) * 100, 100);
 
   // Verificar se metas foram atingidas
