@@ -41,9 +41,9 @@ const Metas = () => {
   const progressMargemBruta = Math.min((margemBrutaMedia / GOALS.margemBrutaMinima) * 100, 100);
 
   // Verificar se metas foram atingidas
-  const metaFaturamentoAtingida = DADOS_2026.faturamentoBrutoAcumulado >= GOALS.faturamentoBrutoAnual;
+  const metaFaturamentoAtingida = faturamentoBrutoAcumulado >= GOALS.faturamentoBrutoAnual;
   const metaMediaAtingida = mediaFaturamentoBruto >= GOALS.mediaFaturamentoMensal;
-  const metaLucroAtingida = DADOS_2026.lucroLiquidoAcumulado >= GOALS.lucroLiquidoAnual;
+  const metaLucroAtingida = lucroLiquidoAcumulado >= GOALS.lucroLiquidoAnual;
   const metaMargemAtingida = margemBrutaMedia >= GOALS.margemBrutaMinima;
 
   const goals = [
@@ -51,7 +51,7 @@ const Metas = () => {
       title: "Faturamento Bruto Anual",
       description: "Meta de faturamento total para o ano de 2026",
       icon: <DollarSign className="h-6 w-6" />,
-      current: DADOS_2026.faturamentoBrutoAcumulado,
+      current: faturamentoBrutoAcumulado,
       target: GOALS.faturamentoBrutoAnual,
       progress: progressFaturamentoAnual,
       achieved: metaFaturamentoAtingida,
@@ -71,7 +71,7 @@ const Metas = () => {
       title: "Lucro Líquido Acumulado",
       description: "Lucro líquido acumulado esperado para o ano",
       icon: <Target className="h-6 w-6" />,
-      current: DADOS_2026.lucroLiquidoAcumulado,
+      current: lucroLiquidoAcumulado,
       target: GOALS.lucroLiquidoAnual,
       progress: progressLucroLiquido,
       achieved: metaLucroAtingida,
