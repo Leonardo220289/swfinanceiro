@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Target, TrendingUp, DollarSign, PieChart, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
-import { formatCurrency, formatPercent } from "@/data/financialData";
+import { formatCurrency, formatPercent, getDataByYear } from "@/data/financialData";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import saudeWorkLogo from "@/assets/saude-work-logo.png";
@@ -13,15 +13,6 @@ const GOALS = {
   mediaFaturamentoMensal: 169000,
   lucroLiquidoAnual: 223080,
   margemBrutaMinima: 60,
-};
-
-// Dados acumulados de 2026 (inicialmente zerados - atualizar conforme o ano avança)
-const DADOS_2026 = {
-  faturamentoBrutoAcumulado: 0,
-  lucroLiquidoAcumulado: 0,
-  lucroBrutoAcumulado: 0,
-  faturamentoLiquidoAcumulado: 0,
-  mesesContabilizados: 0,
 };
 
 const Metas = () => {

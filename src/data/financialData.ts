@@ -228,3 +228,7 @@ export const getPreviousMonthData = (month: string) => {
   if (currentIndex <= 0) return null;
   return financialData[currentIndex - 1];
 };
+
+export const getDataByYear = (year: string) => {
+  return financialData.filter(d => d.month.includes(year));
+};
