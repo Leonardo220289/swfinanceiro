@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Target, TrendingUp, DollarSign, PieChart, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
-import { formatCurrency, formatPercent } from "@/data/financialData";
+import { formatCurrency, formatPercent, getDataByYear } from "@/data/financialData";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import saudeWorkLogo from "@/assets/saude-work-logo.png";
@@ -15,36 +15,35 @@ const GOALS = {
   margemBrutaMinima: 60,
 };
 
-// Dados acumulados de 2026 (inicialmente zerados - atualizar conforme o ano avança)
-const DADOS_2026 = {
-  faturamentoBrutoAcumulado: 0,
-  lucroLiquidoAcumulado: 0,
-  lucroBrutoAcumulado: 0,
-  faturamentoLiquidoAcumulado: 0,
-  mesesContabilizados: 0,
-};
-
 const Metas = () => {
   const navigate = useNavigate();
 
-  // Calcular médias (evitar divisão por zero)
-  const mediaFaturamentoBruto = DADOS_2026.mesesContabilizados > 0 
-    ? DADOS_2026.faturamentoBrutoAcumulado / DADOS_2026.mesesContabilizados 
+  const dados2026 = getDataByYear("26");
+  const mesesContabilizados = dados2026.length;
+  
+  const faturamentoBrutoAcumulado = dados2026.reduce((acc, d) => acc + d.faturamentoBruto, 0);
+  const lucroLiquidoAcumulado = dados2026.reduce((acc, d) => acc + d.lucroLiquido, 0);
+  const lucroBrutoAcumulado = dados2026.reduce((acc, d) => acc + d.lucroBruto, 0);
+  const faturamentoLiquidoAcumulado = dados2026.reduce((acc, d) => acc + d.faturamentoLiquido, 0);
+
+  // Calcular médias
+  const mediaFaturamentoBruto = mesesContabilizados > 0 
+    ? faturamentoBrutoAcumulado / mesesContabilizados 
     : 0;
-  const margemBrutaMedia = DADOS_2026.faturamentoLiquidoAcumulado > 0 
-    ? (DADOS_2026.lucroBrutoAcumulado / DADOS_2026.faturamentoLiquidoAcumulado) * 100 
+  const margemBrutaMedia = faturamentoLiquidoAcumulado > 0 
+    ? (lucroBrutoAcumulado / faturamentoLiquidoAcumulado) * 100 
     : 0;
 
   // Calcular progressos
-  const progressFaturamentoAnual = Math.min((DADOS_2026.faturamentoBrutoAcumulado / GOALS.faturamentoBrutoAnual) * 100, 100);
+  const progressFaturamentoAnual = Math.min((faturamentoBrutoAcumulado / GOALS.faturamentoBrutoAnual) * 100, 100);
   const progressMediaMensal = Math.min((mediaFaturamentoBruto / GOALS.mediaFaturamentoMensal) * 100, 100);
-  const progressLucroLiquido = Math.min((DADOS_2026.lucroLiquidoAcumulado / GOALS.lucroLiquidoAnual) * 100, 100);
+  const progressLucroLiquido = Math.min((lucroLiquidoAcumulado / GOALS.lucroLiquidoAnual) * 100, 100);
   const progressMargemBruta = Math.min((margemBrutaMedia / GOALS.margemBrutaMinima) * 100, 100);
 
   // Verificar se metas foram atingidas
-  const metaFaturamentoAtingida = DADOS_2026.faturamentoBrutoAcumulado >= GOALS.faturamentoBrutoAnual;
+  const metaFaturamentoAtingida = faturamentoBrutoAcumulado >= GOALS.faturamentoBrutoAnual;
   const metaMediaAtingida = mediaFaturamentoBruto >= GOALS.mediaFaturamentoMensal;
-  const metaLucroAtingida = DADOS_2026.lucroLiquidoAcumulado >= GOALS.lucroLiquidoAnual;
+  const metaLucroAtingida = lucroLiquidoAcumulado >= GOALS.lucroLiquidoAnual;
   const metaMargemAtingida = margemBrutaMedia >= GOALS.margemBrutaMinima;
 
   const goals = [
@@ -52,7 +51,7 @@ const Metas = () => {
       title: "Faturamento Bruto Anual",
       description: "Meta de faturamento total para o ano de 2026",
       icon: <DollarSign className="h-6 w-6" />,
-      current: DADOS_2026.faturamentoBrutoAcumulado,
+      current: faturamentoBrutoAcumulado,
       target: GOALS.faturamentoBrutoAnual,
       progress: progressFaturamentoAnual,
       achieved: metaFaturamentoAtingida,
@@ -72,7 +71,7 @@ const Metas = () => {
       title: "Lucro Líquido Acumulado",
       description: "Lucro líquido acumulado esperado para o ano",
       icon: <Target className="h-6 w-6" />,
-      current: DADOS_2026.lucroLiquidoAcumulado,
+      current: lucroLiquidoAcumulado,
       target: GOALS.lucroLiquidoAnual,
       progress: progressLucroLiquido,
       achieved: metaLucroAtingida,
