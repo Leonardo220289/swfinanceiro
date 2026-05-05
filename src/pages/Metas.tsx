@@ -5,7 +5,7 @@ import { Target, TrendingUp, DollarSign, PieChart, CheckCircle2, AlertCircle, Ar
 import { formatCurrency, formatPercent, getDataByYear } from "@/data/financialData";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import saudeWorkLogo from "@/assets/saude-work-logo.png";
+import { AppHeader } from "@/components/AppHeader";
 
 // Metas para 2026
 const GOALS = {
@@ -91,36 +91,7 @@ const Metas = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <img 
-                src={saudeWorkLogo} 
-                alt="Saúde Work" 
-                className="h-16 w-auto"
-              />
-              <div className="space-y-1">
-                <h1 className="text-4xl font-bold tracking-tight">
-                  Metas 2026
-                </h1>
-                <p className="text-muted-foreground text-lg">
-                  Acompanhamento dos Objetivos Anuais
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/")}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Voltar ao Dashboard
-            </Button>
-          </div>
-        </div>
-      </header>
+      <AppHeader title="Metas 2026" subtitle="Acompanhamento dos Objetivos Anuais" />
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
