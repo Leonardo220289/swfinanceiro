@@ -14,7 +14,321 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categorias: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: string
+          nome: string
+          tipo: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          tipo: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
+      colaboradores: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      contatos: {
+        Row: {
+          ativo: boolean
+          categoria_id: string | null
+          cnpj: string | null
+          created_at: string
+          emails: string | null
+          id: string
+          meio_pagamento_id: string | null
+          modelo_cobranca: string | null
+          nome: string
+          observacao: string | null
+          produto_id: string | null
+          updated_at: string
+          vencimento_padrao: string | null
+          vigencia_contrato: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          categoria_id?: string | null
+          cnpj?: string | null
+          created_at?: string
+          emails?: string | null
+          id?: string
+          meio_pagamento_id?: string | null
+          modelo_cobranca?: string | null
+          nome: string
+          observacao?: string | null
+          produto_id?: string | null
+          updated_at?: string
+          vencimento_padrao?: string | null
+          vigencia_contrato?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          categoria_id?: string | null
+          cnpj?: string | null
+          created_at?: string
+          emails?: string | null
+          id?: string
+          meio_pagamento_id?: string | null
+          modelo_cobranca?: string | null
+          nome?: string
+          observacao?: string | null
+          produto_id?: string | null
+          updated_at?: string
+          vencimento_padrao?: string | null
+          vigencia_contrato?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contatos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contatos_meio_pagamento_id_fkey"
+            columns: ["meio_pagamento_id"]
+            isOneToOne: false
+            referencedRelation: "meios_pagamento"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contatos_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lancamentos: {
+        Row: {
+          categoria_id: string | null
+          competencia: string
+          contato_id: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          meio_pagamento_id: string | null
+          nfs_boleto: string | null
+          numero_nf: string | null
+          observacao: string | null
+          origem: string | null
+          produto_id: string | null
+          status: Database["public"]["Enums"]["lancamento_status"]
+          updated_at: string
+          valor: number
+          vencimento_bancario: string | null
+          vencimento_contrato: string | null
+        }
+        Insert: {
+          categoria_id?: string | null
+          competencia: string
+          contato_id?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          meio_pagamento_id?: string | null
+          nfs_boleto?: string | null
+          numero_nf?: string | null
+          observacao?: string | null
+          origem?: string | null
+          produto_id?: string | null
+          status?: Database["public"]["Enums"]["lancamento_status"]
+          updated_at?: string
+          valor: number
+          vencimento_bancario?: string | null
+          vencimento_contrato?: string | null
+        }
+        Update: {
+          categoria_id?: string | null
+          competencia?: string
+          contato_id?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          meio_pagamento_id?: string | null
+          nfs_boleto?: string | null
+          numero_nf?: string | null
+          observacao?: string | null
+          origem?: string | null
+          produto_id?: string | null
+          status?: Database["public"]["Enums"]["lancamento_status"]
+          updated_at?: string
+          valor?: number
+          vencimento_bancario?: string | null
+          vencimento_contrato?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lancamentos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lancamentos_contato_id_fkey"
+            columns: ["contato_id"]
+            isOneToOne: false
+            referencedRelation: "contatos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lancamentos_meio_pagamento_id_fkey"
+            columns: ["meio_pagamento_id"]
+            isOneToOne: false
+            referencedRelation: "meios_pagamento"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lancamentos_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meios_pagamento: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      produtos: {
+        Row: {
+          ativo: boolean
+          codigo: string
+          created_at: string
+          descricao: string | null
+          id: string
+        }
+        Insert: {
+          ativo?: boolean
+          codigo: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+        }
+        Update: {
+          ativo?: boolean
+          codigo?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      reembolsos: {
+        Row: {
+          alimentacao: number
+          colaborador_id: string | null
+          competencia: string
+          created_at: string
+          data_pagamento: string | null
+          id: string
+          km: number
+          lancamento_id: string | null
+          observacao: string | null
+          outros: number
+          pago: boolean
+          total: number | null
+        }
+        Insert: {
+          alimentacao?: number
+          colaborador_id?: string | null
+          competencia: string
+          created_at?: string
+          data_pagamento?: string | null
+          id?: string
+          km?: number
+          lancamento_id?: string | null
+          observacao?: string | null
+          outros?: number
+          pago?: boolean
+          total?: number | null
+        }
+        Update: {
+          alimentacao?: number
+          colaborador_id?: string | null
+          competencia?: string
+          created_at?: string
+          data_pagamento?: string | null
+          id?: string
+          km?: number
+          lancamento_id?: string | null
+          observacao?: string | null
+          outros?: number
+          pago?: boolean
+          total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reembolsos_colaborador_id_fkey"
+            columns: ["colaborador_id"]
+            isOneToOne: false
+            referencedRelation: "colaboradores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reembolsos_lancamento_id_fkey"
+            columns: ["lancamento_id"]
+            isOneToOne: false
+            referencedRelation: "lancamentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +337,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      lancamento_status: "LANCADO" | "PAGO" | "VENCIDO" | "CANCELADO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +464,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      lancamento_status: ["LANCADO", "PAGO", "VENCIDO", "CANCELADO"],
+    },
   },
 } as const
