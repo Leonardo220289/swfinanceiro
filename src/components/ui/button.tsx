@@ -37,9 +37,11 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, type, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+    // Evita que botões dentro de <form> disparem submit acidental (e recarreguem a página)
+    const safeType = asChild ? type : (type ?? "button");
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} type={safeType} {...props} />;
   },
 );
 Button.displayName = "Button";
